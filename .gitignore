@@ -1,8 +1,17 @@
+# Visual Studio
 .vs/
+*.user
+*.suo
+
+# Build output
 bin/
 obj/
 
+# Publish Output
 publish/
 
-*.user
-*.suo
+# Rider
+.idea/
+
+# Logs
+*.log
