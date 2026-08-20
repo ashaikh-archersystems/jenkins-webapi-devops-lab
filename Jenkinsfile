@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['DEV', 'STAGE', 'UAT'],
+            description: 'Select deployment environment'
+        )
+    }
+
     stages {
 
         stage('Restore') {
@@ -27,17 +35,22 @@ pipeline {
             }
         }
 
-        stage('Deploy DEV') {
+        stage('Deploy') {
             steps {
-                bat '''
-                if exist "C:\\Users\\ashaikh\\OneDrive - ARCHER Systems LLC\\Desktop\\practice\\practice\\Deployments\\DEV" (
-                    rmdir /s /q "C:\\Users\\ashaikh\\OneDrive - ARCHER Systems LLC\\Desktop\\practice\\practice\\Deployments\\DEV"
-                )
+                script {
 
-                mkdir "C:\\Users\\ashaikh\\OneDrive - ARCHER Systems LLC\\Desktop\\practice\\practice\\Deployments\\DEV"
+                    def targetFolder = "C:\\Users\\ashaikh\\OneDrive - ARCHER Systems LLC\\Desktop\\practice\\practice\\Deployments\\${params.ENVIRONMENT}"
 
-                xcopy publish\\* "C:\\Users\\ashaikh\\OneDrive - ARCHER Systems LLC\\Desktop\\practice\\practice\\Deployments\\DEV\\" /E /I /Y
-                '''
+                    bat """
+                    if exist "${targetFolder}" (
+                        rmdir /s /q "${targetFolder}"
+                    )
+
+                    mkdir "${targetFolder}"
+
+                    xcopy publish\\* "${targetFolder}\\" /E /I /Y
+                    """
+                }
             }
         }
     }
