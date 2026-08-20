@@ -4,6 +4,7 @@
 *.suo
 
 # Build output
+publish/
 bin/
 obj/
 
